@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Be My Valentine 💘</title>
 
-<!-- Romantic font -->
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -55,11 +52,7 @@ img {
     margin-bottom: 15px;
 }
 
-h1 {
-    font-family: 'Pacifico', cursive;
-    color: #e74c3c;
-    font-size: 32px;
-}
+h1 { font-family: 'Pacifico', cursive; color: #e74c3c; font-size: 32px; }
 
 #warningText {
     margin-top: 10px;
@@ -82,20 +75,21 @@ button {
     cursor: pointer;
     position: absolute;
     transition: all 0.3s ease;
+    z-index: 10; /* ensures button stays above white box */
 }
 
 #yesBtn {
     background: #2ecc71;
     color: white;
     left: 50%;
-    transform: translateX(-110%);
+    transform: translateX(-50%);
 }
 
 #noBtn {
     background: #e74c3c;
     color: white;
     left: 50%;
-    transform: translateX(10%);
+    transform: translateX(-50%);
 }
 
 /* Success screen */
@@ -113,27 +107,17 @@ button {
     text-align: center;
 }
 
-.success h1 {
-    font-size: 40px;
-    margin-bottom: 10px;
-}
-
-.success p {
-    font-family: 'Poppins', sans-serif;
-    font-size: 18px;
-}
+.success h1 { font-size: 40px; margin-bottom: 10px; }
+.success p { font-family: 'Poppins', sans-serif; font-size: 18px; }
 </style>
 </head>
 
 <body>
 
-<!-- Floating hearts container -->
 <div id="hearts"></div>
 
 <div class="container">
-    <!-- Replace with your image or GIF -->
     <img src="https://media.giphy.com/media/l4FGpP4lxGGgK5CBW/giphy.gif" alt="Cute">
-
     <h1>Will you be my Valentine? 💘</h1>
     <p id="warningText"></p>
 
@@ -143,13 +127,11 @@ button {
     </div>
 </div>
 
-<!-- Success screen -->
 <div class="success" id="success">
     <h1>You said YES! 💖</h1>
     <p>Best decision you could’ve made 😌</p>
 </div>
 
-<!-- Music -->
 <audio id="music">
     <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
 </audio>
@@ -163,7 +145,6 @@ const success = document.getElementById('success');
 const music = document.getElementById('music');
 
 let noScale = 1;
-let yesScale = 1;
 let stage = 0;
 
 const messages = [
@@ -173,31 +154,26 @@ const messages = [
     "Last chance 💔"
 ];
 
-// Move NO button inside container
 function moveNoButton() {
     const rect = container.getBoundingClientRect();
-    const maxX = rect.width - noBtn.offsetWidth;
-    const maxY = rect.height - noBtn.offsetHeight - 60;
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY + 60;
+    // stay inside the container
+    const x = Math.random() * (rect.width - btnWidth);
+    const y = Math.random() * (rect.height - btnHeight - 60) + 60;
 
     noBtn.style.left = x + 'px';
     noBtn.style.top = y + 'px';
+    noBtn.style.zIndex = 10;
 
-    // Shrink NO but never disappear
-    noScale = Math.max(noScale - 0.1, 0.6);
+    // shrink NO but never disappear
+    noScale = Math.max(noScale - 0.05, 0.6);
     noBtn.style.transform = `scale(${noScale})`;
 
-    // Grow YES
-    yesScale += 0.15;
-    yesBtn.style.transform = `translateX(-110%) scale(${yesScale})`;
-
-    // Change text
-    if(stage < messages.length){
-        warningText.textContent = messages[stage];
-        stage++;
-    }
+    // cycle warning text endlessly
+    warningText.textContent = messages[stage];
+    stage = (stage + 1) % messages.length;
 }
 
 noBtn.addEventListener('mouseenter', moveNoButton);
@@ -210,7 +186,7 @@ yesBtn.addEventListener('click', () => {
     confetti();
 });
 
-// Floating hearts background
+// Floating hearts
 function spawnHeart() {
     const heart = document.createElement('div');
     heart.className = 'heart';
@@ -219,13 +195,11 @@ function spawnHeart() {
     heart.style.fontSize = Math.random() * 20 + 15 + 'px';
     heart.style.animationDuration = Math.random() * 3 + 4 + 's';
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 7000);
 }
-
 setInterval(spawnHeart, 300);
 
-// Simple confetti
+// Confetti
 function confetti() {
     for (let i = 0; i < 100; i++) {
         const c = document.createElement('div');
@@ -236,7 +210,6 @@ function confetti() {
         c.style.fontSize = Math.random() * 24 + 16 + 'px';
         c.style.animation = `fall ${Math.random() * 2 + 2}s linear forwards`;
         document.body.appendChild(c);
-
         setTimeout(() => c.remove(), 4000);
     }
 }
@@ -250,4 +223,4 @@ document.head.appendChild(style);
 </script>
 
 </body>
-</html>
+    </html>
